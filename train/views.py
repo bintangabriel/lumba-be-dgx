@@ -4,6 +4,10 @@ from be_dgx.app_redis import Redis
 import os
 import requests
 from be_dgx.celery import app
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 @app.task(acks_late=True)
 def training_simulation_2(username, workspace, type, file_key, filename, model_type, id, model_name, epoch, learning_rate):
@@ -31,7 +35,7 @@ def training_simulation_2(username, workspace, type, file_key, filename, model_t
         res = requests.post(training_service_url, data=model_metadata)
         print(res)
         # return Response(data=res.json()) => for non-celery task
-        return res
+        return res.json()
         # return res
     except Exception as e:
         # return Response({'message': "input error"}, status=status.HTTP_400_BAD_REQUEST) => for non-celery task
